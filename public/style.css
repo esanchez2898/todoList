@@ -1,0 +1,210 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #181824;
+    overflow: hidden;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#addButton {
+    display: none;
+}
+
+main {
+    min-width: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*align-items: center;*/
+    /*background-color: rgb(212, 212, 212);*/
+    border-radius: 10px;
+}
+
+h1 {
+    color: rgb(233, 233, 233);
+}
+
+div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+li {
+    display: inline-block;
+    margin: 5px;
+    color: rgb(233, 233, 233);
+    font-size: 18px;
+}
+
+form {
+    width: 100%;
+}
+
+input[type="text"] {
+    width: 100%;
+    background-color: #25273c;
+    color: rgb(233, 233, 233);
+    border: 2px solid #181824;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 18px;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+ul {
+    background-color: #25273c;
+    min-width: 700px;
+    padding-left: 15px;
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: left;
+}
+
+#itemsLeft {
+    color: rgb(233, 233, 233);
+}
+
+button {
+    width: 20px;
+    height: 20px;
+    /*background-color: #9c9c9c;*/
+    background-color: transparent;
+    color: white;
+    border: 1px solid #868686;
+    border-radius: 50%;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#deleteButton:hover {
+    background-color: #c84444;
+    transform: scale(1.2);
+}
+
+#updateButton:hover {
+    background-color: #458ba0;
+    transform: scale(1.2);
+}
+
+
+
+#checkButton:hover {
+    background-color: #49a045;
+    transform: scale(1.4);
+}
+
+#lastSection {
+    margin-top: 35px;
+    display: flex;
+}
+
+.lastSectionBotton {
+    width: max-content;
+    border: none;
+    background: transparent;
+    border-radius: 0%;
+}
+
+.lastSectionBotton:hover {
+    color: rgb(87, 87, 87);
+}
+
+.buttonSelected {
+    color: blue;
+}
+
+#itemsLeft {
+    margin-right: 200px;
+    margin-bottom: 10px;
+}
+
+#miInput {
+    background-color: transparent;
+    border: none;
+    width: 88%;
+}
+
+
+
+input[type="text"].test {
+    color: rgb(152, 152, 152);
+    text-decoration: line-through;
+    text-decoration-thickness: 3px;
+    text-decoration-color: rgba(186, 186, 186, 0.5);
+}
+
+
+
+
+
+
+
+/* Ocultar el checkbox nativo */
+.custom-checkbox {
+    position: absolute;
+    opacity: 0;
+}
+
+/* Estilo para el contenedor del checkbox */
+label {
+    display: inline-block;
+    cursor: pointer;
+    padding-left: 30px;
+    position: relative;
+    font-size: 18px;
+}
+
+/* Estilo del "falso" checkbox (el cuadrado) */
+label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #555;
+    background-color: white;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+/* Estilo cuando el checkbox está marcado */
+.custom-checkbox:checked+label::before {
+    background-color: #4caf50;
+    border-color: #4caf50;
+}
+
+/* Estilo del check cuando el checkbox está marcado */
+.custom-checkbox:checked+label::after {
+    content: '\2713';
+    /* Símbolo de check */
+    position: absolute;
+    left: 4px;
+    top: 0px;
+    color: white;
+    font-size: 18px;
+}
+
+
+.botonActivo {    
+    color: rgb(124, 160, 165);
+    border-top: 4px solid rgb(218, 218, 218);
+}
