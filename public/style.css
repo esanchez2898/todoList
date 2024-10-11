@@ -144,7 +144,7 @@ button {
 
 
 
-input[type="text"].test {
+input[type="text"].itemCompleted {
     color: rgb(152, 152, 152);
     text-decoration: line-through;
     text-decoration-thickness: 3px;

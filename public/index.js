@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const newItemsList = document.getElementById('newItems');
     const inputField = document.getElementById('item');
 
-    const route = '/activeItems'
+    //let route = '/items?status=active'; // Updated to follow RESTful route structure
+    let route = '/items'; // Updated to follow RESTful route structure
 
     loadAllItems(route);
 
@@ -12,20 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const itemName = inputField.value.trim();
 
         if (itemName) {
-            addNewItem(itemName)
+            addNewItem(itemName);
             inputField.value = '';
         }
     });
 
-    /*refreshButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        loadAllItems();
-    });*/
-
-
     // POST
     function addNewItem(itemName) {
-        fetch('/addItem', {
+        fetch('/createItem', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,81 +45,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const items = data.jsonResponse;
 
-                /*if (Object.values(items).length == 0) {
-
-                    const li = document.createElement('li');
-                    li.textContent = `${Object.values(items).length} items left. Please insert a new Todo`;
-                    //div.appendChild(li);
-                    newItemsList.appendChild(li);
-
-                } else {*/
-
-                for (let id in items) {
+                items.forEach(item => {
                     const div = document.createElement('div');
-
-                    //const li = document.createElement('li');
-                    //li.textContent = `${items[id].name}`;
-
-
                     const inputText = document.createElement("input");
                     inputText.type = "text";
                     inputText.id = "miInput";
-                    inputText.textContent = `${items[id].name}`;
-                    inputText.value = `${items[id].name}`;
-
-                    //console.log("testtttttttttttttiiiiiiiiiiinggg", data.jsonResponse[id].status === )
-
-                    /*buttonAll.classList.add('buttonSelected');
-                    buttonActive.classList.remove('buttonSelected');
-                    buttonCompleted.classList.remove('buttonSelected');*/
+                    inputText.textContent = `${item.todo}`;
+                    inputText.value = `${item.todo}`;
 
                     const deleteButton = document.createElement('button');
                     deleteButton.textContent = '✖';
                     deleteButton.id = "deleteButton";
-                    deleteButton.addEventListener('click', () => deleteItem(id));
+                    deleteButton.addEventListener('click', () => deleteItem(item.id));
 
                     const updateButton = document.createElement('button');
                     updateButton.textContent = '✎';
                     updateButton.id = "updateButton";
-                    updateButton.addEventListener('click', () => updateItem(id, prompt('Enter new name:')));
-
-
-
-                    /*const checkButton = document.createElement('button');
-                    checkButton.textContent = '✔';
-                    checkButton.id = "checkButton";                    
-                    checkButton.addEventListener('click', () => {
-                        //li.style.textDecoration = 'line-through';                            
-                        completeItem(id)
-                    });*/
-
+                    updateButton.addEventListener('click', () => updateItem(item.id, prompt('Enter new name:')));
 
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.id = 'myCheckbox';
 
                     checkbox.addEventListener('click', () => {
-                        completeItem(id)
+                        if (checkbox.checked) {
+                            inputText.classList.add('itemCompleted');
+                            updateStatus('completed', item.id);
+                        } else {
+                            inputText.classList.remove('itemCompleted');
+                            updateStatus('active', item.id);
+                        }
                     });
 
-
-                    if (data.jsonResponse[id].status === 'completed') {
-                        inputText.classList.add('test')
+                    if (item.status === 'completed') {
+                        inputText.classList.toggle('itemCompleted');
                         checkbox.checked = true;
                     }
 
                     div.appendChild(deleteButton);
                     div.appendChild(updateButton);
-                    //div.appendChild(checkButton);
                     div.appendChild(checkbox);
-                    //div.appendChild(li);
-
                     div.appendChild(inputText);
-
                     newItemsList.appendChild(div);
-                }
+                });
 
-                // Crear los elementos
+                // Footer section with filters
                 const div = document.createElement('div');
                 div.id = "lastSection";
 
@@ -139,68 +104,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 const buttonCompleted = document.createElement('button');
                 buttonCompleted.classList.add('lastSectionBotton');
 
-                // Configurar el contenido de los elementos
                 span.textContent = Object.values(items).length;
                 divItemsLeft.textContent = ' items left';
                 divItemsLeft.prepend(span);
 
                 buttonAll.textContent = 'All';
                 buttonAll.addEventListener('click', () => {
-                    route = '/allItems'
-                    loadAllItems(route)
-                })
-
+                    route = '/items';
+                    loadAllItems(route);
+                });
 
                 buttonActive.textContent = 'Active';
                 buttonActive.addEventListener('click', () => {
-                    route = '/activeItems'
-                    loadAllItems(route)
-                })
-
+                    route = '/items?status=active';
+                    loadAllItems(route);
+                });
 
                 buttonCompleted.textContent = 'Completed';
                 buttonCompleted.addEventListener('click', () => {
-                    route = '/completedItems'
-                    loadAllItems(route)
-                })
+                    route = '/items?status=completed';
+                    loadAllItems(route);
+                });
 
-
-                // Añadir los elementos al contenedor
                 div.appendChild(divItemsLeft);
                 div.appendChild(buttonAll);
                 div.appendChild(buttonActive);
                 div.appendChild(buttonCompleted);
                 newItemsList.appendChild(div);
-
-
-                //if (data.jsonResponse[id].status === 'completed') {
-                if (route === '/allItems') {
-                    buttonAll.classList.add('botonActivo')
-                    buttonActive.classList.remove('botonActivo')
-                    buttonCompleted.classList.remove('botonActivo')
-
-                } else if (route === '/activeItems') {
-                    buttonAll.classList.remove('botonActivo')
-                    buttonActive.classList.add('botonActivo')
-                    buttonCompleted.classList.remove('botonActivo')
-                    
-                } else if (route === '/completedItems') {
-                    buttonAll.classList.remove('botonActivo')
-                    buttonActive.classList.remove('botonActivo')
-                    buttonCompleted.classList.add('botonActivo')
-                }
-
-
-                //}
             })
             .catch(error => console.error('Error:', error));
     }
 
-
-
     // DELETE
     function deleteItem(id) {
-        fetch(`/deleteItem/${id}`, {
+        fetch(`/items/${id}`, {
             method: 'DELETE',
         })
             .then(response => response.json())
@@ -211,38 +148,29 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error:', error));
     }
 
-    // PUT STATUS
-    function completeItem(id) {
-        fetch(`/completeItem/${id}`, {
-            method: 'PUT',
+    // PATCH STATUS
+    function updateStatus(status, id) {
+        fetch(`/items/${id}/status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status }),
         })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                console.log("status completed")
-                loadAllItems(route);
-            })
-            .catch(error => console.error('Error:', error));
-    }
-    // PUT STATUS
-    function completeItem(id) {
-        fetch(`/completeItem/${id}`, {
-            method: 'PUT',
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                console.log("status completed")
-                loadAllItems(route);
+                console.log(`status ${status}`);
+                //loadAllItems(route);
             })
             .catch(error => console.error('Error:', error));
     }
 
-    // PUT
+    // PATCH TODO
     function updateItem(id, newName) {
         if (newName) {
-            fetch(`/updateItem/${id}`, {
-                method: 'PUT',
+            fetch(`/items/${id}`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -256,5 +184,4 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.error('Error:', error));
         }
     }
-
 });
