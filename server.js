@@ -1,11 +1,39 @@
+//how to work with git?? how many push i have to do?
+//branch?? versions??? when??? how many??
+
 import express from "express";
+import bcrypt from 'bcrypt';
 import db from './db.js';
+import jwt from 'jsonwebtoken';
 const app = express();
 const port = 3001;
 
 // Middleware
 app.use(express.static('public')); // Serve static files from the 'public' directory
 app.use(express.json()); // Parse incoming JSON requests
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // GET /items
 app.get('/items', async (req, res) => {
@@ -128,6 +156,119 @@ app.patch('/items/:id/status', async (req, res) => {
         res.status(500).json({ error: "Database error" }); // Handle database errors
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// diferent files???????????
+
+app.post('/register', async (req, res) => {
+    try {
+        const { name, email, password } = req.body // {} or [] ?????
+
+        // Check if something is empty
+        if (!name || !email || !password) {
+            return res.status(400).json({ error: "All fields are required" })
+        }
+
+        // Check if the user already exist
+        const userExist = await db('users').where({ email }).first()
+
+        if (userExist) {
+            return res.status(400).json({ error: "Email already exists" })
+        } else {
+            //create a new user
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            const [newUser] = await db('users')
+                .insert({ name, email, password: passwordHash })
+                .returning('*');
+
+            res.status(200).json({
+                message: "User registered successfully",
+                user: {
+                    id: newUser.id,
+                    name: newUser.name,
+                    email: newUser.email
+                }
+            })
+        }
+
+    } catch (error) {
+        //why here is no necessary return?
+        res.status(400).json({ error: 'Server error' })
+    }
+})
+
+
+
+
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body // {} or [] ?????
+
+        const userExist = await db('users').where({ email }).first()
+        if (!userExist) {
+            return res.status(400).json({ message: 'Invalid email or password' })
+        }
+
+        const validPassword = await bcrypt.compare(password, userExist.password)
+        if (!validPassword) {
+            return res.status(400).json({ message: 'Invalid email or password' })
+        }
+
+        //console.log(userExist)
+        // Crear un token JWT
+        const privateKey = "test"
+        const token = jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' }, function(err, token) {
+          
+          });
+
+        // Responder con el token
+        res.status(200).json({ token });
+
+
+
+    } catch (error) {
+        //why here is no necessary return?
+        console.log(error)
+        res.status(400).json({ error: 'Server error' })
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Start the server
 app.listen(port, () => {

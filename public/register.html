@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="loading-bar.css">
+
+</head>
+
+<body>
+    <main>
+        <label>Name:</label><input id="name" type="text">
+        <label>Email:</label><input id="email" type="text">
+        <label>Password:</label><input id="pw" type="text">
+        <input id="signIn" type="button" value="SignIn">
+
+        <ul>
+            <li>Already Member? <a href="login.html">Login</a></li>
+        </ul>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+        // Toastr Configuration
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "timeOut": "5000"
+        };
+
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const password = document.getElementById('pw');
+
+        const signIn = document.getElementById('signIn').addEventListener('click', () => {
+
+            // POST
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: name.value, email: email.value, password: password.value }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.message) {
+                        Swal.fire({
+                            title: "Succesfull!",
+                            text: data.message,
+                            icon: "success",
+                        }).then((result) => {
+                            if (result.isConfirmed || result.isDismissed) {
+                                window.location.href = 'login.html';
+                            }
+                        });
+
+
+                    } else {
+                        toastr.error(data.error);
+                    }
+                })
+                .catch(error => {
+                    toastr.error('Something is wrong in the conection');
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>

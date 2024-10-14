@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 buttonAll.textContent = 'All';
                 buttonAll.addEventListener('click', () => {
-                    route = '/items';
-                    loadAllItems(route);
+                    route = '/items';                    
+                    loadAllItems(route);                    
                 });
 
                 buttonActive.textContent = 'Active';
@@ -131,6 +131,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.appendChild(buttonActive);
                 div.appendChild(buttonCompleted);
                 newItemsList.appendChild(div);
+
+                if (route == '/items') {
+                    buttonAll.classList.add('botonActivo');
+                } else if (route == '/items?status=active') {
+                    buttonActive.classList.add('botonActivo');
+                } else if (route == '/items?status=completed') {
+                    buttonCompleted.classList.add('botonActivo');
+                }
+
+
             })
             .catch(error => console.error('Error:', error));
     }
