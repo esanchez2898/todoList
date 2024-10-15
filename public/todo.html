@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="loading-bar.css">
+</head>
+
+<body>    
+    <main>
+        <h1>TODO</h1>
+        <form method="post">
+            <input type="text" id="item" placeholder="Insert a new todo...">
+            <button id="addButton">Add</button>
+        </form>
+        <ul id="newItems">
+        </ul>
+        <input id="logout" type="button" value="logout">
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>

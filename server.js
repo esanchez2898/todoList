@@ -5,13 +5,201 @@ import express from "express";
 import bcrypt from 'bcrypt';
 import db from './db.js';
 import jwt from 'jsonwebtoken';
+import path from "path";
+import cookieParser from "cookie-parser";
+import { error } from "console";
 const app = express();
 const port = 3001;
 
 // Middleware
-app.use(express.static('public')); // Serve static files from the 'public' directory
-app.use(express.json()); // Parse incoming JSON requests
+app.use(express.static('public', { index: false })); // No sirve index.html automáticamente
 
+app.use(express.json()); // Parse incoming JSON requests
+app.use(cookieParser())
+
+
+
+// authMiddleware.js
+const authMiddleware = (req, res, next) => {
+    const token = req.cookies.access_token; // Obtener el token desde las cookies
+
+    if (!token) {
+        return res.status(403).json({ error: 'Access denied, no token provided' });
+    }
+
+    try {
+        const privateKey = "test"; // Debe ser la misma clave privada que usaste para firmar el token
+        const decoded = jwt.verify(token, privateKey); // Verificar y decodificar el token
+        req.user = decoded; // Almacenar la info del token decodificado en la request
+        next(); // Continuar con la siguiente función
+    } catch (error) {
+        return res.status(403).json({ error: 'Invalid token' });
+    }
+};
+
+
+
+
+
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve('public/index.html'));
+});
+
+
+app.get('/todo', authMiddleware, async (req, res) => {
+    try {
+        const todos = await db('todos').where({ user_id: req.user.id }); // Accede al id del usuario desde el token decodificado
+        //res.status(200).json(todos);
+        res.sendFile(path.resolve('public/todo.html'));
+
+    } catch (error) {
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// diferent files???????????
+
+app.post('/register', async (req, res) => {
+    try {
+        const { name, email, password } = req.body // {} or [] ?????
+
+        // Check if something is empty
+        if (!name || !email || !password) {
+            return res.status(400).json({ error: "All fields are required" })
+        }
+
+        // Check if the user already exist
+        const userExist = await db('users').where({ email }).first()
+
+        if (userExist) {
+            return res.status(400).json({ error: "Email already exists" })
+        } else {
+            //create a new user
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            const [newUser] = await db('users')
+                .insert({ name, email, password: passwordHash })
+                .returning('*');
+
+            res.status(200).json({
+                message: "User registered successfully",
+                user: {
+                    id: newUser.id,
+                    name: newUser.name,
+                    email: newUser.email
+                }
+            })
+        }
+
+    } catch (error) {
+        //why here is no necessary return?
+        res.status(400).json({ error: 'Server error' })
+    }
+})
+
+
+
+
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body // {} or [] ?????
+
+        const userExist = await db('users').where({ email }).first()
+        if (!userExist) {
+            return res.status(400).json({ error: 'Invalid email or password' })
+        }
+
+        const validPassword = await bcrypt.compare(password, userExist.password)
+        if (!validPassword) {
+            return res.status(400).json({ error: 'Invalid email or password' })
+        }
+
+        console.log(userExist)
+
+
+        // Crear un token JWT
+        const privateKey = "test"
+        const token = jwt.sign({ name: userExist.name }, privateKey, { expiresIn: '1h' })
+
+
+        // Responder con el token
+        res.cookie('access_token', token, {
+            httpOnly: true, // la cookie solo se puede acceder en el servidor
+            //secure:
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 60
+        }).status(200).json({ userExist, token });
+
+
+
+    } catch (error) {
+        //why here is no necessary return?
+        console.log(error)
+        res.status(400).json({ error: 'Server error' })
+    }
+    /*
+    
+        app.get('/todo', (req, res) => {
+            const token = req.cookies.access_token
+    
+            if(!token) {
+                return res.status(403).send('Access not authorized')
+            } else{
+                console.log(token)
+            }
+            /*
+    
+            try {
+                const data = jwt.verify(token, 'test') // se va a buscar el name //linea 238
+    
+                //res.sendFile(path.resolve('public/todo.html'));
+                con
+    
+            } catch (error) {
+                res.status(403).send('Access not authorized')
+            }
+    
+    */
+
+    //})
+
+
+})
+
+
+app.post('/logout', (req, res) => {
+    res.clearCookie('access_token')
+    .json({message: "Logout successful"})
+})
 
 
 
@@ -156,111 +344,6 @@ app.patch('/items/:id/status', async (req, res) => {
         res.status(500).json({ error: "Database error" }); // Handle database errors
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// diferent files???????????
-
-app.post('/register', async (req, res) => {
-    try {
-        const { name, email, password } = req.body // {} or [] ?????
-
-        // Check if something is empty
-        if (!name || !email || !password) {
-            return res.status(400).json({ error: "All fields are required" })
-        }
-
-        // Check if the user already exist
-        const userExist = await db('users').where({ email }).first()
-
-        if (userExist) {
-            return res.status(400).json({ error: "Email already exists" })
-        } else {
-            //create a new user
-            const passwordHash = await bcrypt.hash(password, 10);
-
-            const [newUser] = await db('users')
-                .insert({ name, email, password: passwordHash })
-                .returning('*');
-
-            res.status(200).json({
-                message: "User registered successfully",
-                user: {
-                    id: newUser.id,
-                    name: newUser.name,
-                    email: newUser.email
-                }
-            })
-        }
-
-    } catch (error) {
-        //why here is no necessary return?
-        res.status(400).json({ error: 'Server error' })
-    }
-})
-
-
-
-
-app.post('/login', async (req, res) => {
-    try {
-        const { email, password } = req.body // {} or [] ?????
-
-        const userExist = await db('users').where({ email }).first()
-        if (!userExist) {
-            return res.status(400).json({ message: 'Invalid email or password' })
-        }
-
-        const validPassword = await bcrypt.compare(password, userExist.password)
-        if (!validPassword) {
-            return res.status(400).json({ message: 'Invalid email or password' })
-        }
-
-        //console.log(userExist)
-        // Crear un token JWT
-        const privateKey = "test"
-        const token = jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' }, function(err, token) {
-          
-          });
-
-        // Responder con el token
-        res.status(200).json({ token });
-
-
-
-    } catch (error) {
-        //why here is no necessary return?
-        console.log(error)
-        res.status(400).json({ error: 'Server error' })
-    }
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
