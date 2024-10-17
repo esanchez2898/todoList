@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="loading-bar.css">
 </head>
 
-<body>    
+<body>
     <main>
         <h1>TODO</h1>
         <form method="post">
@@ -25,6 +25,38 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
     <script src="./index.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hacer una petición al backend para obtener la información del usuario
+            fetch('/user', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.user) {
+                        // Mostrar la información del usuario en el frontend
+                        const userName = data.user.name;
+                        const userEmail = data.user.email;
+
+                        const h1 = document.querySelector('h1');
+                        h1.textContent = `Welcome, ${userName}!`;
+                        console.log(`User Info: Name - ${userName}, Email - ${userEmail}`);
+                    } else {
+                        console.error('No user data found:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                });
+
+            
+        });
+
+    </script>
 </body>
 
 </html>

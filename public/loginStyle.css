@@ -6,26 +6,27 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #181824;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
 }
 
 main {
     display: flex;
-    width: 70%;
+    width: 100%;
     max-width: 1000px;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 section {
-    background-color: #fff;
+    background-color: #dbdbdb;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: 45%;
+    width: 50%;
     display: none; /* Las secciones están ocultas inicialmente */
 }
 
@@ -44,6 +45,8 @@ input[type="text"], input[type="password"] {
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
+    background-color: #3c3c52;
+    color: white;
     border-radius: 4px;
 }
 

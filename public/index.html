@@ -15,8 +15,8 @@
 <body>
     <main>
         <section class="login">
-            <label>Email:</label><input id="email" type="text">
-            <label>Password:</label><input id="pw" type="password">
+            <label>Email:</label><input id="email-lg" type="text">
+            <label>Password:</label><input id="pw-lg" type="password">
             <input id="login" type="button" value="Login">
 
             <ul>
@@ -27,8 +27,8 @@
 
         <section class="register">
             <label>Name:</label><input id="name" type="text">
-            <label>Email:</label><input id="reg-email" type="text">
-            <label>Password:</label><input id="reg-pw" type="password">
+            <label>Email:</label><input id="email" type="text">
+            <label>Password:</label><input id="pw" type="password">
             <input id="signIn" type="button" value="Sign In">
 
             <ul>
@@ -62,6 +62,9 @@
         const name = document.getElementById('name');
         const email = document.getElementById('email');
         const password = document.getElementById('pw');
+
+        const emailLg = document.getElementById('email-lg');
+        const passwordLg = document.getElementById('pw-lg');
 
         // Toastr Configuration
         toastr.options = {
@@ -138,13 +141,21 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: email.value, password: password.value }),
+                body: JSON.stringify({ email: emailLg.value, password: passwordLg.value }),
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
                         toastr.error(data.error);
-                    } 
+                    } else {
+                        console.log("hello :p ", data)
+                        fetch('/todo')
+                            .then(response => response.json())
+                            .then(data => { 
+                                console.log(data)
+                                window.location.href = 'todo.html';
+                            })
+                    }
                 })
                 .catch(error => {
                     toastr.error('Something is wrong in the conection');
