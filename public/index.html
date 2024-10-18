@@ -4,22 +4,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+    <link rel="stylesheet" href="loginStyle.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="loading-bar.css">
 </head>
 
 <body>
     <main>
-        <h1>TODO</h1>
-        <form method="post">
-            <input type="text" id="item" placeholder="Insert a new todo...">
-            <button id="addButton">Add</button>
-        </form>
-        <ul id="newItems">
-        </ul>
+        <section class="login">
+            <label>Email:</label><input id="email-lg" type="text">
+            <label>Password:</label><input id="pw-lg" type="password">
+            <input id="login" type="button" value="Login">
+
+            <ul>
+                <!-- <li><a href="#" id="forgotPassword">Forgot password?</a></li> -->
+                <li>New Here? <a href="#" id="showRegister">Register</a></li>
+            </ul>
+        </section>
+
+        <section class="register">
+            <label>Name:</label><input id="name" type="text">
+            <label>Email:</label><input id="email" type="text">
+            <label>Password:</label><input id="pw" type="password">
+            <input id="signIn" type="button" value="Sign In">
+
+            <ul>
+                <li>Already Member? <a href="#" id="showLogin">Login</a></li>
+            </ul>
+        </section>
+
+        <!--<section class="logo">
+            <img src="https://img.freepik.com/free-vector/colorful-todo-list-illustration_1308-173328.jpg?semt=ais_hybrid"
+                alt="Logo">
+        </section>-->
     </main>
 
-    <script src="./index.js"></script>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+        // Elementos del DOM
+        const loginSection = document.querySelector('.login');
+        const registerSection = document.querySelector('.register');
+        const showRegisterLink = document.getElementById('showRegister');
+        const showLoginLink = document.getElementById('showLogin');
+
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const password = document.getElementById('pw');
+
+        const emailLg = document.getElementById('email-lg');
+        const passwordLg = document.getElementById('pw-lg');
+
+        // Toastr Configuration
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "timeOut": "5000"
+        };
+
+
+        // Mostrar sección de registro
+        showRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginSection.style.display = 'none';
+            registerSection.style.display = 'block';
+        });
+
+        // Mostrar sección de login
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerSection.style.display = 'none';
+            loginSection.style.display = 'block';
+        });
+
+
+
+
+        const register = document.getElementById('signIn').addEventListener('click', () => {
+
+            // POST
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: name.value, email: email.value, password: password.value }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.message) {
+                        Swal.fire({
+                            title: "Succesfull!",
+                            text: data.message,
+                            icon: "success",
+                        }).then((result) => {
+                            if (result.isConfirmed || result.isDismissed) {
+                                window.location.href = 'index.html';
+                            }
+                        });
+
+
+                    } else {
+                        toastr.error(data.error);
+                    }
+                })
+                .catch(error => {
+                    toastr.error('Something is wrong in the conection');
+                    console.error('Error:', error);
+                });
+        });
+
+
+
+
+
+
+
+        const login = document.getElementById('login').addEventListener('click', () => {
+
+            // POST
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: emailLg.value, password: passwordLg.value }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        toastr.error(data.error);
+                    } else {
+                        console.log("hello :p ", data)
+                        fetch('/todo')
+                            .then(response => response.json())
+                            .then(data => { 
+                                console.log(data)
+                                window.location.href = 'todo.html';
+                            })
+                    }
+                })
+                .catch(error => {
+                    toastr.error('Something is wrong in the conection');
+                    console.error('Error:', error);
+                });
+        });
+
+
+
+    </script>
 </body>
 
 </html>

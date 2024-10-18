@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.getElementById('addButton');
     const newItemsList = document.getElementById('newItems');
     const inputField = document.getElementById('item');
+    const logout = document.getElementById('logout')
 
     //let route = '/items?status=active'; // Updated to follow RESTful route structure
     let route = '/items'; // Updated to follow RESTful route structure
@@ -17,6 +18,25 @@ document.addEventListener('DOMContentLoaded', () => {
             inputField.value = '';
         }
     });
+
+
+    logout.addEventListener('click', () => {
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                window.location.href = 'index.html';
+
+            }
+        )
+
+
+    })
 
     // POST
     function addNewItem(itemName) {
@@ -131,6 +151,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.appendChild(buttonActive);
                 div.appendChild(buttonCompleted);
                 newItemsList.appendChild(div);
+
+                if (route == '/items') {
+                    buttonAll.classList.add('botonActivo');
+                } else if (route == '/items?status=active') {
+                    buttonActive.classList.add('botonActivo');
+                } else if (route == '/items?status=completed') {
+                    buttonCompleted.classList.add('botonActivo');
+                }
+
+
             })
             .catch(error => console.error('Error:', error));
     }
