@@ -1,13 +1,15 @@
 import express from 'express';
 import db from '../db.js'; // Importa tu instancia de base de datos
+import authMiddleware from './authMiddleware.js';
 
 const router = express.Router();
 
 // GET /items
-router.get('/items', async (req, res) => {
+router.get('/items', authMiddleware, async (req, res) => {
     const { status } = req.query; // Get the status from query parameters
+    const userId = req.user.id;
     try {
-        const items = status ? await db('todos').select('*').where({ status }) : await db('todos').select('*');
+        const items = status ? await db('todos').select('*').where({ user_id: userId }).andWhere({ status }) : await db('todos').select('*').where({ user_id: userId });
         res.status(200).json({
             message: 'Data loaded successfully!',
             jsonResponse: items
@@ -18,10 +20,12 @@ router.get('/items', async (req, res) => {
 });
 
 // POST /createItem
-router.post('/createItem', async (req, res) => {
+router.post('/createItem', authMiddleware, async (req, res) => {
     const { name, status } = req.body;
+    const userId = req.user.id; // Obtenemos el user_id desde el token
+
     try {
-        const [newTodo] = await db('todos').insert({ todo: name, status }).returning('*');
+        const [newTodo] = await db('todos').insert({ todo: name, status, user_id: userId  }).returning('*');
         res.status(201).json({ jsonResponse: newTodo });
     } catch (error) {
         res.status(500).json({ error: "Database error" });

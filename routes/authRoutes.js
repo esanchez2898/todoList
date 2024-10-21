@@ -3,6 +3,11 @@ import bcrypt from 'bcrypt';
 import db from '../db.js';
 import jwt from 'jsonwebtoken';
 import authMiddleware from './authMiddleware.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const jwtSecret = process.env.JWT_SECRET;
 
 const router = express.Router();
 
@@ -55,7 +60,7 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email }, "test", { expiresIn: '1h' });
+    const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email }, jwtSecret, { expiresIn: '1h' });
     res.cookie('access_token', token, {
         httpOnly: true,
         sameSite: 'strict',
@@ -65,6 +70,11 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', (req, res) => {
     res.clearCookie('access_token').json({ message: "Logout successful" });
+});
+
+// Ruta protegida
+router.get('/todo.html', authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, 'todo.html')); // Envía el archivo HTML si el usuario está autenticado
 });
 
 export default router;
