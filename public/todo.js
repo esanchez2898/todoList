@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        credentials: 'include' // Incluye las cookies en la solicitud
     })
         .then(response => response.json())
         .then(data => {
@@ -235,10 +236,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(error => console.error('Error:', error));
         }
-    }
-
-    buttonActive.addEventListener('click', () => {
-        route = '/items?status=active';
-        loadAllItems(route);
-    });
+    }    
 });
