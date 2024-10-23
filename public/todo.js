@@ -26,14 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching user data:', error);
         });
 
-
-
     const addButton = document.getElementById('addButton');
     const newItemsList = document.getElementById('newItems');
     const inputField = document.getElementById('item');
-    const logout = document.getElementById('logout')
+    const logout = document.getElementById('logout');
 
-    let route = '/items'; // Updated to follow RESTful route structure
+    let route = '/items'; // Ruta inicial para los "todos"
 
     loadAllItems(route);
 
@@ -47,29 +45,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     logout.addEventListener('click', () => {
         fetch('https://todolist-j854.onrender.com/logout', {  // Cambiar aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            credentials: 'include' // Incluye las cookies en la solicitud
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                console.log(data);
                 window.location.href = 'index.html';
             })
             .catch(error => console.error('Error:', error));
-    })
+    });
 
     // POST
     function addNewItem(itemName) {
-        fetch('https://todolist-j854.onrender.com/createItem', {  // Cambiar aquí
+        fetch('https://todolist-j854.onrender.com/items', {  // Cambiar aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include', // Incluye las cookies en la solicitud
             body: JSON.stringify({ name: itemName, status: "active" }),
         })
             .then(response => response.json())
@@ -82,116 +81,116 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // GET
     function loadAllItems(route) {
-        fetch('https://todolist-j854.onrender.com' + route)  // Cambiar aquí
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                newItemsList.innerHTML = '';
+        fetch('https://todolist-j854.onrender.com' + route, {
+            credentials: 'include' // Incluye las cookies en la solicitud
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            newItemsList.innerHTML = '';
 
-                const items = data.jsonResponse;
+            const items = data.jsonResponse;
 
-                items.forEach(item => {
-                    const div = document.createElement('div');
-                    const inputText = document.createElement("input");
-                    inputText.type = "text";
-                    inputText.id = "miInput";
-                    inputText.textContent = `${item.todo}`;
-                    inputText.value = `${item.todo}`;
-
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = '✖';
-                    deleteButton.id = "deleteButton";
-                    deleteButton.addEventListener('click', () => deleteItem(item.id));
-
-                    const updateButton = document.createElement('button');
-                    updateButton.textContent = '✎';
-                    updateButton.id = "updateButton";
-                    updateButton.addEventListener('click', () => updateItem(item.id, prompt('Enter new name:')));
-
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = 'myCheckbox';
-
-                    checkbox.addEventListener('click', () => {
-                        if (checkbox.checked) {
-                            inputText.classList.add('itemCompleted');
-                            updateStatus('completed', item.id);
-                        } else {
-                            inputText.classList.remove('itemCompleted');
-                            updateStatus('active', item.id);
-                        }
-                    });
-
-                    if (item.status === 'completed') {
-                        inputText.classList.toggle('itemCompleted');
-                        checkbox.checked = true;
-                    }
-
-                    div.appendChild(deleteButton);
-                    div.appendChild(updateButton);
-                    div.appendChild(checkbox);
-                    div.appendChild(inputText);
-                    newItemsList.appendChild(div);
-                });
-
-                // Footer section with filters
+            items.forEach(item => {
                 const div = document.createElement('div');
-                div.id = "lastSection";
+                const inputText = document.createElement("input");
+                inputText.type = "text";
+                inputText.id = "miInput";
+                inputText.value = `${item.todo}`;
+                inputText.setAttribute('readonly', true); // Hace el input de solo lectura
 
-                const divItemsLeft = document.createElement('div');
-                divItemsLeft.id = "itemsLeft";
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '✖';
+                deleteButton.addEventListener('click', () => deleteItem(item.id));
 
-                const span = document.createElement('span');
-                const buttonAll = document.createElement('button');
-                buttonAll.classList.add('lastSectionBotton');
-                const buttonActive = document.createElement('button');
-                buttonActive.classList.add('lastSectionBotton');
-                const buttonCompleted = document.createElement('button');
-                buttonCompleted.classList.add('lastSectionBotton');
+                const updateButton = document.createElement('button');
+                updateButton.textContent = '✎';
+                updateButton.addEventListener('click', () => updateItem(item.id, prompt('Enter new name:')));
 
-                span.textContent = Object.values(items).length;
-                divItemsLeft.textContent = ' items left';
-                divItemsLeft.prepend(span);
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
 
-                buttonAll.textContent = 'All';
-                buttonAll.addEventListener('click', () => {
-                    route = '/items';
-                    loadAllItems(route);
+                checkbox.addEventListener('click', () => {
+                    if (checkbox.checked) {
+                        inputText.classList.add('itemCompleted');
+                        updateStatus('completed', item.id);
+                    } else {
+                        inputText.classList.remove('itemCompleted');
+                        updateStatus('active', item.id);
+                    }
                 });
 
-                buttonActive.textContent = 'Active';
-                buttonActive.addEventListener('click', () => {
-                    route = '/items?status=active';
-                    loadAllItems(route);
-                });
-
-                buttonCompleted.textContent = 'Completed';
-                buttonCompleted.addEventListener('click', () => {
-                    route = '/items?status=completed';
-                    loadAllItems(route);
-                });
-
-                div.appendChild(divItemsLeft);
-                div.appendChild(buttonAll);
-                div.appendChild(buttonActive);
-                div.appendChild(buttonCompleted);
-                newItemsList.appendChild(div);
-
-                if (route == '/items') {
-                    buttonAll.classList.add('botonActivo');
-                } else if (route == '/items?status=active') {
-                    buttonActive.classList.add('botonActivo');
-                } else if (route == '/items?status=completed') {
-                    buttonCompleted.classList.add('botonActivo');
+                if (item.status === 'completed') {
+                    inputText.classList.add('itemCompleted');
+                    checkbox.checked = true;
                 }
-            })
-            .catch(error => console.error('Error:', error));
+
+                div.appendChild(deleteButton);
+                div.appendChild(updateButton);
+                div.appendChild(checkbox);
+                div.appendChild(inputText);
+                newItemsList.appendChild(div);
+            });
+
+            // Footer section with filters
+            const div = document.createElement('div');
+            div.id = "lastSection";
+
+            const divItemsLeft = document.createElement('div');
+            divItemsLeft.id = "itemsLeft";
+
+            const span = document.createElement('span');
+            const buttonAll = document.createElement('button');
+            buttonAll.classList.add('lastSectionBotton');
+            const buttonActive = document.createElement('button');
+            buttonActive.classList.add('lastSectionBotton');
+            const buttonCompleted = document.createElement('button');
+            buttonCompleted.classList.add('lastSectionBotton');
+
+            span.textContent = items.length; // Se asume que items es un array
+            divItemsLeft.textContent = ' items left';
+            divItemsLeft.prepend(span);
+
+            buttonAll.textContent = 'All';
+            buttonAll.addEventListener('click', () => {
+                route = '/items';
+                loadAllItems(route);
+            });
+
+            buttonActive.textContent = 'Active';
+            buttonActive.addEventListener('click', () => {
+                route = '/items?status=active';
+                loadAllItems(route);
+            });
+
+            buttonCompleted.textContent = 'Completed';
+            buttonCompleted.addEventListener('click', () => {
+                route = '/items?status=completed';
+                loadAllItems(route);
+            });
+
+            div.appendChild(divItemsLeft);
+            div.appendChild(buttonAll);
+            div.appendChild(buttonActive);
+            div.appendChild(buttonCompleted);
+            newItemsList.appendChild(div);
+
+            if (route === '/items') {
+                buttonAll.classList.add('botonActivo');
+            } else if (route === '/items?status=active') {
+                buttonActive.classList.add('botonActivo');
+            } else if (route === '/items?status=completed') {
+                buttonCompleted.classList.add('botonActivo');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
 
     // DELETE
     function deleteItem(id) {
         fetch(`https://todolist-j854.onrender.com/items/${id}`, {  // Cambiar aquí
             method: 'DELETE',
+            credentials: 'include' // Incluye las cookies en la solicitud
         })
             .then(response => response.json())
             .then(data => {
@@ -208,13 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include', // Incluye las cookies en la solicitud
             body: JSON.stringify({ status }),
         })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                console.log(`status ${status}`);
-                //loadAllItems(route);
+                loadAllItems(route);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -227,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include', // Incluye las cookies en la solicitud
                 body: JSON.stringify({ name: newName }),
             })
                 .then(response => response.json())
