@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // Hacer una petición al backend para obtener la información del usuario
-    fetch('/user', {
+    fetch('https://todolist-j854.onrender.com/user', {  // Cambiar aquí
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputField = document.getElementById('item');
     const logout = document.getElementById('logout')
 
-    //let route = '/items?status=active'; // Updated to follow RESTful route structure
     let route = '/items'; // Updated to follow RESTful route structure
 
     loadAllItems(route);
@@ -49,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     logout.addEventListener('click', () => {
-        fetch('/logout', {
+        fetch('https://todolist-j854.onrender.com/logout', {  // Cambiar aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,16 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 console.log(data)
                 window.location.href = 'login.html';
-
-            }
-            )
-
-
+            })
+            .catch(error => console.error('Error:', error));
     })
 
     // POST
     function addNewItem(itemName) {
-        fetch('/createItem', {
+        fetch('https://todolist-j854.onrender.com/createItem', {  // Cambiar aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // GET
     function loadAllItems(route) {
-        fetch(route)
+        fetch('https://todolist-j854.onrender.com' + route)  // Cambiar aquí
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -187,15 +183,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (route == '/items?status=completed') {
                     buttonCompleted.classList.add('botonActivo');
                 }
-
-
             })
             .catch(error => console.error('Error:', error));
     }
 
     // DELETE
     function deleteItem(id) {
-        fetch(`/items/${id}`, {
+        fetch(`https://todolist-j854.onrender.com/items/${id}`, {  // Cambiar aquí
             method: 'DELETE',
         })
             .then(response => response.json())
@@ -207,8 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // PATCH STATUS
-    function updateStatus(status, id) {  // updateStatus('active', item.id);
-        fetch(`/items/${id}/status`, {
+    function updateStatus(status, id) {  
+        fetch(`https://todolist-j854.onrender.com/items/${id}/status`, {  // Cambiar aquí
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -224,12 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error:', error));
     }
 
-
-
     // PATCH TODO
     function updateItem(id, newName) {
         if (newName) {
-            fetch(`/items/${id}`, {
+            fetch(`https://todolist-j854.onrender.com/items/${id}`, {  // Cambiar aquí
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -249,7 +241,4 @@ document.addEventListener('DOMContentLoaded', () => {
         route = '/items?status=active';
         loadAllItems(route);
     });
-
-
-
 });
