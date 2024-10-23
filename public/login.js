@@ -54,7 +54,7 @@ registerForm.addEventListener('submit', (e) => {
     if (!validateForm(userEmail, userPassword)) return;  // Validate the form. If validation fails, stop here.
 
     // Send a POST request to the server to register the new user
-    fetch('/register', {
+    fetch('https://todolist-j854.onrender.com/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },  // Send the data as JSON
         body: JSON.stringify({ name: userName, email: userEmail, password: userPassword })  // Send the user's details
@@ -88,7 +88,7 @@ loginForm.addEventListener('submit', (e) => {
     if (!validateForm(userEmail, userPassword)) return;  // Validate the form. If validation fails, stop here.
 
     // Send a POST request to the server to log in the user
-    fetch('/login', {
+    fetch('https://todolist-j854.onrender.com/login', {  // Cambiar aquí
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },  // Send the data as JSON
         body: JSON.stringify({ email: userEmail, password: userPassword })  // Send the login credentials
