@@ -11,6 +11,10 @@ const port = 3001;
 app.use(express.static('public', { index: false }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+    origin: 'https://profound-blini-88895d.netlify.app', // Permitir solo tu frontend
+    credentials: true, // Permitir el uso de cookies si es necesario
+}));
 
 // Routes
 app.use(authRoutes);
