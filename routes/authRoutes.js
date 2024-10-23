@@ -55,7 +55,8 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.cookie('access_token', token, {
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'None', // Necesario si el frontend y el backend están en diferentes orígenes
+        secure: true, // Asegúrate de que esto esté configurado en producción (HTTPS)
         maxAge: 1000 * 60 * 60,
     }).status(200).json({ message: `Login successful,  We're happy to see you again ${userExist.name}` }); // I CAN'T READ THIS MESSAGE
 });

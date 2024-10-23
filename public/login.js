@@ -91,6 +91,7 @@ loginForm.addEventListener('submit', (e) => {
     fetch('https://todolist-j854.onrender.com/login', {  // Cambiar aquí
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },  // Send the data as JSON
+        credentials: 'include', // Asegúrate de incluir las credenciales
         body: JSON.stringify({ email: userEmail, password: userPassword })  // Send the login credentials
     })
         .then(response => response.json())  // Convert the server response to JSON
