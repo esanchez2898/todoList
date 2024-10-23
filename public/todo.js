@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // POST
     function addNewItem(itemName) {
-        fetch('https://todolist-j854.onrender.com/items', {  // Cambiar aquí
+        fetch('https://todolist-j854.onrender.com/createItem', {  // Cambiar aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
