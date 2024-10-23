@@ -3,19 +3,14 @@ import bcrypt from 'bcrypt';
 import db from '../db.js';
 import jwt from 'jsonwebtoken';
 import authMiddleware from './authMiddleware.js';
+import dotenv from 'dotenv';
 
-const router = express.Router();
+dotenv.config();
 
-router.get('/todo', authMiddleware, async (req, res) => {
-    const todos = await db('todos').where({ id: req.user.id });
-    res.json(todos);
-});
+const router = express.Router(); // app. --> router.
 
-router.get('/user', authMiddleware, (req, res) => {
-    // Aquí envías los datos del usuario decodificado desde el token
-    res.json({ user: req.user });
-});
 
+// ---------- Register ----------
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -43,6 +38,8 @@ router.post('/register', async (req, res) => {
     });
 });
 
+
+// ---------- LOGIN ----------
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -55,16 +52,39 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email }, "test", { expiresIn: '1h' });
+    const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.cookie('access_token', token, {
         httpOnly: true,
         sameSite: 'strict',
         maxAge: 1000 * 60 * 60,
-    }).status(200).json({ message: "Login successful" });
+    }).status(200).json({ message: `Login successful,  We're happy to see you again ${userExist.name}` }); // I CAN'T READ THIS MESSAGE
 });
 
+
+
+// ---------- LOGOUT ----------
 router.post('/logout', (req, res) => {
-    res.clearCookie('access_token').json({ message: "Logout successful" });
+    res.clearCookie('access_token').json({ message: "Logout successful" }); // I CAN'T READ THIS MESSAGE
 });
+
+
+
+// ---------- USER INFO ----------
+router.get('/user', authMiddleware, (req, res) => {
+    res.json({ user: req.user });
+});
+
+
+/*router.get('/todo', authMiddleware, async (req, res) => {
+    console.log("helloooooooooooooooooooooooooooooo ", req.user)
+    const todos = await db('todos').where({ id: req.user.id });
+    res.json(todos);
+});
+
+// Your authMiddleware and route definitions
+/*router.get('/todo.html', authMiddleware, (req, res) => {    
+    console.log('Middleware passed, sending file...');
+    //res.sendFile(path.resolve('public/todo.html')); // Use path.resolve to point to the correct file
+});*/
 
 export default router;

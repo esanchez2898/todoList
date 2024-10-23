@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"> <!-- Error Notification -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css"> <!-- Automatic page load progress bar -->
+    <link rel="stylesheet" href="loading-bar.css">  <!-- Automatic page load progress bar -->
+</head>
+
+<body>
+    <main>
+        <!-- Login Section -->
+        <section class="login" aria-label="Login Section">
+            <form id="loginForm">
+                <label for="email-lg">Email:</label>
+                <input id="email-lg" type="email" required aria-required="true" placeholder="Enter your email">
+
+                <label for="pw-lg">Password:</label>
+                <input id="pw-lg" type="password" required aria-required="true" minlength="6" placeholder="Enter your password">
+
+                <button type="submit" id="login">Login</button>
+
+                <p>New here? <a href="#" id="showRegister">Register</a></p>
+            </form>
+        </section>
+
+        <!-- Register Section -->
+        <section class="register" aria-label="Register Section" hidden>
+            <form id="registerForm">
+                <label for="name">Name:</label>
+                <input id="name" type="text" required aria-required="true" placeholder="Enter your name">
+
+                <label for="email">Email:</label>
+                <input id="email" type="email" required aria-required="true" placeholder="Enter your email">
+
+                <label for="pw">Password:</label>
+                <input id="pw" type="password" required aria-required="true" minlength="6" placeholder="Create a password">
+
+                <button type="submit" id="signIn">Sign Up</button>
+
+                <p>Already a member? <a href="#" id="showLogin">Login</a></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>   <!-- Error Notification -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>   <!-- Automatic page load progress bar -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Success Message User Added -->
+    <script src="login.js"></script>
+</body>
+
+</html>
