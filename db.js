@@ -1,17 +1,17 @@
 import knex from 'knex';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Carga las variables de entorno
+dotenv.config();
 
 const db = knex({
     client: 'pg',
     connection: {
-        host: process.env.HOST, // Cambiado a process.env.HOST
-        user: process.env.USERDB, // Cambiado a process.env.USER
-        password: process.env.PW, // Cambiado a process.env.PW
-        database: process.env.DB, // Cambiado a process.env.DB
+        host: process.env.HOST,
+        user: process.env.USERDB,
+        password: process.env.PW,
+        database: process.env.DB,
         ssl: {
-            rejectUnauthorized: false // Mantener esto si es necesario
+            rejectUnauthorized: false // Develop enviroment
         }
     }
 });

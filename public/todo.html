@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="todo.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css"
         rel="stylesheet" />
     <link rel="stylesheet" href="loading-bar.css">
@@ -24,39 +24,7 @@
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-    <script src="./index.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Hacer una petición al backend para obtener la información del usuario
-            fetch('/user', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.user) {
-                        // Mostrar la información del usuario en el frontend
-                        const userName = data.user.name;
-                        const userEmail = data.user.email;
-
-                        const h1 = document.querySelector('h1');
-                        h1.textContent = `Welcome, ${userName}!`;
-                        console.log(`User Info: Name - ${userName}, Email - ${userEmail}`);
-                    } else {
-                        console.error('No user data found:', data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching user data:', error);
-                });
-
-            
-        });
-
-    </script>
+    <script src="./todo.js"></script>
 </body>
 
 </html>

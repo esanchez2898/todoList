@@ -18,7 +18,7 @@ app.use(todoRoutes);
 
 // Serve HTML
 app.get('/', (req, res) => {
-    res.sendFile(path.resolve('public/index.html'));
+    res.sendFile(path.resolve('public/login.html'));
 });
 
 

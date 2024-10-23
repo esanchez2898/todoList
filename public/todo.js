@@ -1,4 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Hacer una petición al backend para obtener la información del usuario
+    fetch('/user', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.user) {
+                // Mostrar la información del usuario en el frontend
+                const userName = data.user.name;
+                const userEmail = data.user.email;
+
+                const h1 = document.querySelector('h1');
+                h1.textContent = `Welcome, ${userName}!`;
+                console.log(`User Info: Name - ${userName}, Email - ${userEmail}`);
+            } else {
+                console.error('No user data found:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching user data:', error);
+        });
+
+
+
     const addButton = document.getElementById('addButton');
     const newItemsList = document.getElementById('newItems');
     const inputField = document.getElementById('item');
@@ -30,10 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                window.location.href = 'index.html';
+                window.location.href = 'login.html';
 
             }
-        )
+            )
 
 
     })
@@ -179,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // PATCH STATUS
-    function updateStatus(status, id) {
+    function updateStatus(status, id) {  // updateStatus('active', item.id);
         fetch(`/items/${id}/status`, {
             method: 'PATCH',
             headers: {
@@ -195,6 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error:', error));
     }
+
+
 
     // PATCH TODO
     function updateItem(id, newName) {
@@ -214,4 +244,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.error('Error:', error));
         }
     }
+
+    buttonActive.addEventListener('click', () => {
+        route = '/items?status=active';
+        loadAllItems(route);
+    });
+
+
+
 });

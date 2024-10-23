@@ -17,7 +17,7 @@ body {
 main {
     display: flex;
     width: 100%;
-    max-width: 1000px;
+    max-width: 800px;
     justify-content: center;
 }
 
@@ -27,11 +27,6 @@ section {
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 50%;
-    display: none; /* Las secciones están ocultas inicialmente */
-}
-
-.login {
-    display: block; /* Mostrar solo la sección de login por defecto */
 }
 
 label {
@@ -40,7 +35,7 @@ label {
     font-weight: bold;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -50,7 +45,7 @@ input[type="text"], input[type="password"] {
     border-radius: 4px;
 }
 
-input[type="button"] {
+button {
     width: 100%;
     padding: 10px;
     background-color: #007BFF;
@@ -61,7 +56,7 @@ input[type="button"] {
     font-size: 16px;
 }
 
-input[type="button"]:hover {
+button:hover {
     background-color: #0056b3;
 }
 
@@ -81,16 +76,4 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-.logo {
-    width: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.logo img {
-    width: 100%;
-    max-width: 120px;
 }
