@@ -63,7 +63,7 @@ registerForm.addEventListener('submit', (e) => {
         .then(data => {  // Handle the response
             if (data.message) {
                 Swal.fire('Success', data.message, 'success').then(() => {
-                    window.location.href = 'login.html';  // If registration is successful, redirect to login
+                    window.location.href = 'index.html';  // If registration is successful, redirect to login
                 });
             } else {
                 toastr.error(data.error);
