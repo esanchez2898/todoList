@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // Hacer una petición al backend para obtener la información del usuario
-    fetch('https://todolist-j854.onrender.com/user', {  // Cambiar aquí
+    fetch('https://todolist-develop.onrender.com/user', {  // Cambiar aquí
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logout.addEventListener('click', () => {
-        fetch('https://todolist-j854.onrender.com/logout', {  // Cambiar aquí
+        fetch('https://todolist-develop.onrender.com/logout', {  // Cambiar aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // POST
     function addNewItem(itemName) {
-        fetch('https://todolist-j854.onrender.com/createItem', {  // Cambiar aquí
+        fetch('https://todolist-develop.onrender.com/createItem', {  // Cambiar aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // GET
     function loadAllItems(route) {
-        fetch('https://todolist-j854.onrender.com' + route, {
+        fetch('https://todolist-develop.onrender.com' + route, {
             credentials: 'include' // Incluye las cookies en la solicitud
         })
         .then(response => response.json())
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // DELETE
     function deleteItem(id) {
-        fetch(`https://todolist-j854.onrender.com/items/${id}`, {  // Cambiar aquí
+        fetch(`https://todolist-develop.onrender.com/items/${id}`, {  // Cambiar aquí
             method: 'DELETE',
             credentials: 'include' // Incluye las cookies en la solicitud
         })
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // PATCH STATUS
     function updateStatus(status, id) {  
-        fetch(`https://todolist-j854.onrender.com/items/${id}/status`, {  // Cambiar aquí
+        fetch(`https://todolist-develop.onrender.com/items/${id}/status`, {  // Cambiar aquí
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // PATCH TODO
     function updateItem(id, newName) {
         if (newName) {
-            fetch(`https://todolist-j854.onrender.com/items/${id}`, {  // Cambiar aquí
+            fetch(`https://todolist-develop.onrender.com/items/${id}`, {  // Cambiar aquí
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
