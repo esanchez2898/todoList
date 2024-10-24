@@ -87,6 +87,16 @@ loginForm.addEventListener('submit', (e) => {
 
     if (!validateForm(userEmail, userPassword)) return;  // Validate the form. If validation fails, stop here.
 
+     // Mostrar mensaje de "Cargando..."
+     Swal.fire({
+        title: 'Loading...',
+        text: 'Please wait while we log you in',
+        allowOutsideClick: false,  // No permite cerrar la alerta haciendo clic fuera
+        didOpen: () => {
+            Swal.showLoading();  // Muestra el spinner de carga
+        }
+    });
+
     // Send a POST request to the server to log in the user
     fetch('https://todolist-j854.onrender.com/login', {  // Cambiar aquí
         method: 'POST',
@@ -97,14 +107,17 @@ loginForm.addEventListener('submit', (e) => {
         .then(response => response.json())  // Convert the server response to JSON
         .then(data => {  // Handle the response
             if (data.error) {
+                Swal.close();
                 toastr.error(data.error);
             } else {
+                Swal.close();
                 Swal.fire('Success', data.message, 'success').then(() => {
                     window.location.href = 'todo.html';  // If login is successful, redirect to the 'todo' page     // what happen here?????????             how to control the access?
                 });
             }
         })
         .catch(error => {  // Handle any errors that occur during the request
+            Swal.close();
             toastr.error('Something went wrong with the connection');
             console.error('Error:', error);
         });
