@@ -51,6 +51,17 @@ registerForm.addEventListener('submit', (e) => {
     const userEmail = document.getElementById('email').value;
     const userPassword = document.getElementById('pw').value;
 
+    // Mostrar mensaje de "Cargando..."
+    Swal.fire({
+        title: 'Loading...',
+        text: 'Please wait while we log you in',
+        allowOutsideClick: false,  // No permite cerrar la alerta haciendo clic fuera
+        didOpen: () => {
+            Swal.showLoading();  // Muestra el spinner de carga
+        }
+    });
+
+
     if (!validateForm(userEmail, userPassword)) return;  // Validate the form. If validation fails, stop here.
 
     // Send a POST request to the server to register the new user
@@ -62,14 +73,17 @@ registerForm.addEventListener('submit', (e) => {
         .then(response => response.json())  // Convert the server response to JSON
         .then(data => {  // Handle the response
             if (data.message) {
+                Swal.close();
                 Swal.fire('Success', data.message, 'success').then(() => {
                     window.location.href = 'index.html';  // If registration is successful, redirect to login
                 });
             } else {
+                Swal.close();
                 toastr.error(data.error);
             }
         })
         .catch(error => {  // Handle any errors that occur during the request
+            Swal.close();
             toastr.error('Something went wrong with the connection');
             console.error('Error:', error);
         });
@@ -85,6 +99,16 @@ loginForm.addEventListener('submit', (e) => {
     const userEmail = document.getElementById('email-lg').value;
     const userPassword = document.getElementById('pw-lg').value;
 
+    // Mostrar mensaje de "Cargando..."
+    Swal.fire({
+        title: 'Loading...',
+        text: 'Please wait while we log you in',
+        allowOutsideClick: false,  // No permite cerrar la alerta haciendo clic fuera
+        didOpen: () => {
+            Swal.showLoading();  // Muestra el spinner de carga
+        }
+    });
+
     if (!validateForm(userEmail, userPassword)) return;  // Validate the form. If validation fails, stop here.
 
     // Send a POST request to the server to log in the user
@@ -97,14 +121,17 @@ loginForm.addEventListener('submit', (e) => {
         .then(response => response.json())  // Convert the server response to JSON
         .then(data => {  // Handle the response
             if (data.error) {
+                Swal.close();
                 toastr.error(data.error);
             } else {
+                Swal.close();
                 Swal.fire('Success', data.message, 'success').then(() => {
                     window.location.href = 'todo.html';  // If login is successful, redirect to the 'todo' page     // what happen here?????????             how to control the access?
                 });
             }
         })
         .catch(error => {  // Handle any errors that occur during the request
+            Swal.close();
             toastr.error('Something went wrong with the connection');
             console.error('Error:', error);
         });
