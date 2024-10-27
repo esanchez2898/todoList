@@ -7,6 +7,8 @@ dotenv.config();
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.access_token; // Retrieve the access token from cookies
     //console.log('Token:', token); // Log the token for debugging
+    console.log("requestttt: ", req.cookies)
+
 
     if (!token) {
         console.log('No token provided'); // Log if no token

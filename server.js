@@ -13,8 +13,8 @@ app.use(express.static('public', { index: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'https://develop-taskflowmx.netlify.app', // Permitir solo tu frontend
-    credentials: true, // Permitir el uso de cookies si es necesario
+    origin: '*',
+    credentials: true,
 }));
 
 // Routes
