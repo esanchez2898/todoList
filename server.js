@@ -4,6 +4,9 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import todoRoutes from './routes/todoRoutes.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = 3001;
@@ -13,8 +16,8 @@ app.use(express.static('public', { index: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: '*',
-    credentials: true,
+    origin: process.env.ORIGIN, 
+    credentials: true,     
 }));
 
 // Routes
